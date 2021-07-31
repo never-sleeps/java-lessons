@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

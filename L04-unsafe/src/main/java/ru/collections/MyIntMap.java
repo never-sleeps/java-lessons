@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.collections;
 
 public class MyIntMap {
 
