@@ -1,3 +1,4 @@
 rootProject.name = 'java-lessons'
 include 'L01-gradle'
 include 'L02-unit-tests'
+include 'L03-generics'
