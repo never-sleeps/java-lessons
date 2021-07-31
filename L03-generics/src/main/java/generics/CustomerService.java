@@ -19,14 +19,22 @@ public class CustomerService {
     public Map.Entry<Customer, String> getNext(Customer customer) {
         Map.Entry<Customer, String> higherEntry = map.higherEntry(customer);
 
-        return Optional.ofNullable(higherEntry)
-                .map(entry -> {
-                    Customer higherCustomer = entry.getKey();
-                    return new AbstractMap.SimpleEntry<> (
-                            new Customer(higherCustomer.getId(), higherCustomer.getName(), higherCustomer.getScores()),
-                            entry.getValue()
-                    );
-                }).orElse(null);
+        if (higherEntry == null) {
+            return null;
+        }
+        Customer key = higherEntry.getKey();
+        Customer customerCopy = new Customer(key.getId(), key.getName(), key.getScores());
+        return Map.entry(customerCopy, higherEntry.getValue());
+
+        //решения эквиваленты. первое - более читаемое
+//        return Optional.ofNullable(higherEntry)
+//                .map(entry -> {
+//                    Customer higherCustomer = entry.getKey();
+//                    return new AbstractMap.SimpleEntry<> (
+//                            new Customer(higherCustomer.getId(), higherCustomer.getName(), higherCustomer.getScores()),
+//                            entry.getValue()
+//                    );
+//                }).orElse(null);
     }
 
     public void add(Customer customer, String data) {
