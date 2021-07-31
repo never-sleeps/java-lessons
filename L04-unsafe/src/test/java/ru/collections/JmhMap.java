@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.collections;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.openjdk.jmh.annotations.Mode.SingleShotTime;
