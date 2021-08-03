@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import ru.reflection.annotations.After;
 import ru.reflection.annotations.Before;

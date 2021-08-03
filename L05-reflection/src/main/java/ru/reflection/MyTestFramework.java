@@ -36,14 +36,7 @@ public class MyTestFramework {
             if(!testMethods.isEmpty()){
                 for(Method testMethod : testMethods){
                     object = ReflectionHelper.instantiate(clazz);
-
-                    if (beforeMethod != null ) {
-                        ReflectionHelper.callMethod(object, beforeMethod.getName());
-                    }
-                    callMethod(object, testMethod);
-                    if (afterMethod != null ) {
-                        ReflectionHelper.callMethod(object, afterMethod.getName());
-                    }
+                    runTestMethod(object, beforeMethod, testMethod, afterMethod);
                 }
             }
         }
@@ -51,13 +44,26 @@ public class MyTestFramework {
     }
 
     /**
-     * Запуск @Test-метода класса
+     * Запуск @Before, @Test, @After методов
      * @param object - объект класса
-     * @param method - метод
+     * @param beforeMethod - метод @Before
+     * @param method - метод @Test
+     * @param afterMethod - метод @After
      */
-    private void callMethod(Object object, Method method) {
+    private void runTestMethod(
+            Object object,
+            Method beforeMethod,
+            Method method,
+            Method afterMethod
+    ) {
         try {
+            if (beforeMethod != null ) {
+                ReflectionHelper.callMethod(object, beforeMethod.getName());
+            }
             ReflectionHelper.callMethod(object, method.getName());
+            if (afterMethod != null ) {
+                ReflectionHelper.callMethod(object, afterMethod.getName());
+            }
         } catch (RuntimeException e) {
             if (e.getCause() instanceof InvocationTargetException) {
                 failedTests++;

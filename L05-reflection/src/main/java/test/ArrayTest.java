@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import ru.reflection.annotations.Before;
 import ru.reflection.annotations.Test;
@@ -12,8 +12,8 @@ public class ArrayTest {
     private List<Integer> list;
 
     @Before
-    public void initMap() {
-        list = new ArrayList<>();
+    public void initMapWithException() {
+        throw new RuntimeException("@Before method exception running");
     }
 
     @Test
