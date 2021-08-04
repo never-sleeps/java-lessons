@@ -9,22 +9,22 @@ public class Summator {
     private int prevPrevValue = 0;
     private int sumLastThreeValues = 0;
     private int someValue = 0;
-    private final List<Integer> logValues = new ArrayList<>();
+    private final List<Data> logValues = new ArrayList<>();
 
-    public void calc(int value) {
-        logValues.add(value);
+    public void calc(Data data) {
+        logValues.add(data);
         if (logValues.size() % 6_600_000 == 0) {
             logValues.clear();
         }
-        sum += value;
+        sum += data.getValue();
 
-        sumLastThreeValues = value + prevValue + prevPrevValue;
+        sumLastThreeValues = data.getValue() + prevValue + prevPrevValue;
 
         prevPrevValue = prevValue;
-        prevValue = value;
+        prevValue = data.getValue();
 
         for (var idx = 0; idx < 3; idx++) {
-            someValue += (sumLastThreeValues * sumLastThreeValues / (value + 1) - sum);
+            someValue += (sumLastThreeValues * sumLastThreeValues / (data.getValue() + 1) - sum);
             someValue = Math.abs(someValue) + logValues.size();
         }
     }
