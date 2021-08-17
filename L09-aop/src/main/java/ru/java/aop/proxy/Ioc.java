@@ -25,8 +25,12 @@ public class Ioc {
             this.obj = obj;
 
             Set<Method> logMethods = Arrays.stream(obj.getClass().getDeclaredMethods())
-                    .filter(method -> method.isAnnotationPresent(Log.class)).collect(Collectors.toSet());
-            logMethods.forEach(method -> this.methodsForLogging.add(getMethodDescription(method)));
+                    .filter(method -> method.isAnnotationPresent(Log.class))
+                    .collect(Collectors.toSet());
+
+            for (var method : logMethods) {
+                this.methodsForLogging.add(getMethodDescription(method));
+            }
         }
 
         @Override
