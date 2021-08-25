@@ -1,39 +1,14 @@
 package ru.java.solid;
 
-import ru.java.solid.exception.NotEnoughMoneyException;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class Cell {
+public interface Cell {
 
-    private final List<Banknote> banknotes = new ArrayList<>();
+    void addBanknote(List<Nominal> banknotes);
 
-    public Cell(List<Banknote> banknotes) {
-        this.banknotes.addAll(banknotes);
-    }
+    long getTotalAmount();
 
-    public boolean addBanknote(List<Banknote> banknotes) {
-        return this.banknotes.addAll(banknotes);
-    }
+    int getCount();
 
-    public int getAmount() {
-        return banknotes.stream()
-                .mapToInt(Banknote::getValue)
-                .sum();
-    }
-
-    public int getCount() {
-        return banknotes.size();
-    }
-
-    public Banknote getBanknote() {
-        if (banknotes.isEmpty()) {
-            throw new NotEnoughMoneyException();
-        }
-        int idx = banknotes.size() - 1;
-        Banknote banknote = banknotes.get(idx);
-        banknotes.remove(banknote);
-        return banknote;
-    }
+    Nominal getBanknote();
 }

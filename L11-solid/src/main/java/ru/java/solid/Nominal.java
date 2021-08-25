@@ -21,6 +21,8 @@ public enum Nominal {
         this.value = value;
     }
 
+    public Nominal get() { return this; }
+
     public static Nominal of(int value) {
         return Arrays.stream(Nominal.values())
                 .filter(it -> it.value == value)
