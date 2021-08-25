@@ -1,5 +1,6 @@
 package ru.java.solid;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,47 +9,52 @@ public class Application {
     public static void main(String[] args) {
         final int VALUE_FOR_WITHDRAW = 9_850;
 
-        AtmImpl atm = new AtmImpl();
+        Atm atm = new AtmImpl();
         atm.depositMoney(
                 List.of(
-                        new Banknote(5000),
-
-                        new Banknote(2000),
-                        new Banknote(2000),
-
-                        new Banknote(1000),
-                        new Banknote(1000),
-                        new Banknote(1000),
-
-                        new Banknote(500),
-
-                        new Banknote(200),
-                        new Banknote(200),
-
-                        new Banknote(100),
-                        new Banknote(100),
-                        new Banknote(100),
-
-                        new Banknote(50),
-                        new Banknote(50)
+                        Nominal.NOMINAL_5000,
+                        Nominal.NOMINAL_2000, Nominal.NOMINAL_2000,
+                        Nominal.NOMINAL_1000, Nominal.NOMINAL_1000, Nominal.NOMINAL_1000,
+                        Nominal.NOMINAL_500,
+                        Nominal.NOMINAL_200, Nominal.NOMINAL_200,
+                        Nominal.NOMINAL_100, Nominal.NOMINAL_100, Nominal.NOMINAL_100,
+                        Nominal.NOMINAL_50, Nominal.NOMINAL_50
                 )
         );
+
         System.out.println("total Amount = " + atm.getTotalAmount());
-        Map<Nominal, Integer> amountByNominal = atm.getAmountByNominal();
-        amountByNominal.forEach((k, v) -> System.out.print(k + " : " + v / k.getValue() + " | "));
-        System.out.println();
+        Map<Nominal, Long> amountByNominal = atm.getAmountByNominal();
+        sortByNominal(amountByNominal)
+                .forEach((k, v) -> System.out.print(k + " : " + v / k.getValue() + " | "));
+
+        System.out.print("\n\n");
 
         System.out.println("cash = " + VALUE_FOR_WITHDRAW);
-        List<Banknote> cash = atm.withdrawMoney(VALUE_FOR_WITHDRAW);
-        cash.stream()
-                .collect(Collectors.groupingBy(Banknote::getNominal))
-                .forEach((k, v) -> System.out.print(k + " : " + v.size() + " | "));
-        System.out.println();
+        List<Nominal> cash = atm.withdrawMoney(VALUE_FOR_WITHDRAW);
+        Map<Nominal, Long> cashByNominal = cash.stream()
+                .collect(Collectors.groupingBy(Nominal::get, Collectors.counting()));
+        sortByNominal(cashByNominal).forEach((k, v) -> {
+            System.out.print(k + " : " + v + " | ");
+        });
 
-        System.out.println("amountByNominalAfterWithdraw: " + atm.getTotalAmount());
-        Map<Nominal, Integer> amountByNominalAfterWithdraw = atm.getAmountByNominal();
-        amountByNominalAfterWithdraw.forEach((k, v) -> System.out.print(k + " : " + v / k.getValue() + " | "));
+        System.out.print("\n\n");
+
+        System.out.println("total Amount After Withdraw: " + atm.getTotalAmount());
+        Map<Nominal, Long> amountByNominalAfterWithdraw = atm.getAmountByNominal();
+        sortByNominal(amountByNominalAfterWithdraw)
+                .forEach((k, v) -> System.out.print(k + " : " + v / k.getValue() + " | "));
 
         System.out.println();
+    }
+
+    private static Map<Nominal, Long> sortByNominal(Map<Nominal, Long> map) {
+        return map.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                Map.Entry::getValue,
+                                (e1, e2) -> e1, LinkedHashMap::new
+                        ));
     }
 }

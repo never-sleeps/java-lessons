@@ -17,17 +17,17 @@ public class AtmImpl implements Atm{
      * @param banknotesForDeposit - список банкнот
      */
     @Override
-    public void depositMoney(List<Banknote> banknotesForDeposit) {
+    public void depositMoney(List<Nominal> banknotesForDeposit) {
         // группируем в списки по номиналу
-        Map<Nominal, List<Banknote>> byNominal = banknotesForDeposit.stream()
-                .collect(Collectors.groupingBy(Banknote::getNominal));
+        Map<Nominal, List<Nominal>> byNominal = banknotesForDeposit.stream()
+                .collect(Collectors.groupingBy(Nominal::get));
         // распределяем по ячейкам
         byNominal.forEach(
                 (nominal, banknotes) -> {
                     storage.compute(
                             nominal, (k, cell) -> {
                                 if (cell == null) {
-                                    return new Cell(banknotes);
+                                    return new CellImpl(banknotes);
                                 } else {
                                     cell.addBanknote(banknotes);
                                     return cell;
@@ -44,8 +44,8 @@ public class AtmImpl implements Atm{
      * @return список банкнот
      */
     @Override
-    public List<Banknote> withdrawMoney(int requestedAmount) {
-        int availableAmount = getTotalAmount();
+    public List<Nominal> withdrawMoney(long requestedAmount) {
+        long availableAmount = getTotalAmount();
         if (availableAmount < requestedAmount) {
             throw new NotEnoughMoneyException(requestedAmount, availableAmount);
         }
@@ -61,9 +61,9 @@ public class AtmImpl implements Atm{
     /**
      * Информация о сумме для каждого номинала на основе алгоритм расчета выдаваемого количества банкнот.
      * @param requestedAmount запрашиваемая сумма
-     * @return Информация о сумме для каждого номинала
+     * @return Информация о сумме для каждого номинала [Nominal, count]
      */
-    private Map<Nominal, Integer> splitAmountByNominal(int requestedAmount) {
+    private Map<Nominal, Integer> splitAmountByNominal(long requestedAmount) {
         final Integer[] notes = getNotes();
         List<Integer> distribution = getDistributionForRequestedAmount(requestedAmount);
         Map<Nominal, Integer> amountByNominal = new LinkedHashMap<>();
@@ -78,9 +78,9 @@ public class AtmImpl implements Atm{
      * @return сумма остатка денежных средств
      */
     @Override
-    public int getTotalAmount() {
+    public long getTotalAmount() {
         return storage.values().stream()
-                .mapToInt(Cell::getAmount)
+                .mapToLong(Cell::getTotalAmount)
                 .sum();
     }
 
@@ -88,9 +88,9 @@ public class AtmImpl implements Atm{
      * @return Информация о сумме для каждого номинала
      */
     @Override
-    public Map<Nominal, Integer> getAmountByNominal() {
+    public Map<Nominal, Long> getAmountByNominal() {
         return storage.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAmount()));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getTotalAmount()));
     }
 
     /**
@@ -98,7 +98,7 @@ public class AtmImpl implements Atm{
      * 8_850 = 1 * 5000 + 1 * 2000 + 1 * 1000 + 1 * 500 + 1 * 200 + 1 * 100 + 1 * 50.
      * @return идеальное распределение
      */
-    public List<Integer> getIdealDistribution(double amount) {
+    private List<Integer> getIdealDistribution(double amount) {
         Integer[] notes = getNotes();
 
         List<Integer> idealDistribution = new ArrayList<>();

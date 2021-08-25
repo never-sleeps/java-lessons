@@ -5,11 +5,11 @@ import java.util.Map;
 
 public interface Atm {
 
-    void depositMoney(List<Banknote> banknotesForDeposit);
+    void depositMoney(List<Nominal> banknotesForDeposit);
 
-    List<Banknote> withdrawMoney(int amount);
+    List<Nominal> withdrawMoney(long requestedAmount);
 
-    int getTotalAmount();
+    long getTotalAmount();
 
-    Map<Nominal, Integer> getAmountByNominal();
+    Map<Nominal, Long> getAmountByNominal();
 }
