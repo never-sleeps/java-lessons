@@ -7,18 +7,33 @@ import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) {
-        final int VALUE_FOR_WITHDRAW = 9_850;
+        final int VALUE_FOR_WITHDRAW = 8_660;
 
         Atm atm = new AtmImpl();
         atm.depositMoney(
                 List.of(
                         Nominal.NOMINAL_5000,
-                        Nominal.NOMINAL_2000, Nominal.NOMINAL_2000,
-                        Nominal.NOMINAL_1000, Nominal.NOMINAL_1000, Nominal.NOMINAL_1000,
+
+                        Nominal.NOMINAL_2000,
+                        Nominal.NOMINAL_2000,
+
+                        Nominal.NOMINAL_1000,
+                        Nominal.NOMINAL_1000,
+                        Nominal.NOMINAL_1000,
+
                         Nominal.NOMINAL_500,
-                        Nominal.NOMINAL_200, Nominal.NOMINAL_200,
-                        Nominal.NOMINAL_100, Nominal.NOMINAL_100, Nominal.NOMINAL_100,
-                        Nominal.NOMINAL_50, Nominal.NOMINAL_50
+
+                        Nominal.NOMINAL_100,
+                        Nominal.NOMINAL_100,
+                        Nominal.NOMINAL_100,
+                        Nominal.NOMINAL_100,
+                        Nominal.NOMINAL_100,
+
+                        Nominal.NOMINAL_50,
+                        Nominal.NOMINAL_50,
+                        Nominal.NOMINAL_50,
+
+                        Nominal.NOMINAL_10
                 )
         );
 

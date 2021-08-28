@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 public class AtmImpl implements Atm{
 
-    private final Map<Nominal, Cell> storage = new EnumMap<>(Nominal.class);
+    private final Map<Nominal, Cell> storage;
 
-    public AtmImpl() {}
+    public AtmImpl() {
+        storage = new EnumMap<>(Nominal.class);
+    }
 
     /**
      * Внесение банкнот в банкомат в отдельную ячейку для каждого номинала.
@@ -22,14 +24,17 @@ public class AtmImpl implements Atm{
         Map<Nominal, List<Nominal>> byNominal = banknotesForDeposit.stream()
                 .collect(Collectors.groupingBy(Nominal::get));
         // распределяем по ячейкам
-        byNominal.forEach(
-                (nominal, banknotes) -> {
+        getAllNominals().forEach(
+                nominal -> {
                     storage.compute(
                             nominal, (k, cell) -> {
                                 if (cell == null) {
-                                    return new CellImpl(banknotes);
+                                    return new CellImpl(
+                                            nominal.getValue(),
+                                            byNominal.getOrDefault(nominal, Collections.emptyList())
+                                    );
                                 } else {
-                                    cell.addBanknote(banknotes);
+                                    cell.addBanknote(byNominal.get(nominal));
                                     return cell;
                                 }
                             });
@@ -64,13 +69,7 @@ public class AtmImpl implements Atm{
      * @return Информация о сумме для каждого номинала [Nominal, count]
      */
     private Map<Nominal, Integer> splitAmountByNominal(long requestedAmount) {
-        final Integer[] notes = getNotes();
-        List<Integer> distribution = getDistributionForRequestedAmount(requestedAmount);
-        Map<Nominal, Integer> amountByNominal = new LinkedHashMap<>();
-        for (int i = 0; i < notes.length - 1; i++) {
-            amountByNominal.put(Nominal.of(notes[i]), distribution.get(i));
-        }
-        return amountByNominal;
+        return getDistributionForRequestedAmount(requestedAmount);
     }
 
     /**
@@ -98,14 +97,14 @@ public class AtmImpl implements Atm{
      * 8_850 = 1 * 5000 + 1 * 2000 + 1 * 1000 + 1 * 500 + 1 * 200 + 1 * 100 + 1 * 50.
      * @return идеальное распределение
      */
-    private List<Integer> getIdealDistribution(double amount) {
-        Integer[] notes = getNotes();
+    private Map<Nominal, Integer> getIdealDistribution(double amount) {
+        final List<Nominal> nominals = getAllNominals();
 
-        List<Integer> idealDistribution = new ArrayList<>();
-        for(int i = 0 ; i < storage.size() ; i++){
-            int nominal = Nominal.of(notes[i]).getValue();
+        Map<Nominal, Integer> idealDistribution = new TreeMap<>();
+        for(int i = 0 ; i < nominals.size() ; i++){
+            int nominal = nominals.get(i).getValue();
             double remainder = amount % nominal;
-            idealDistribution.add((int) ((amount - remainder) / nominal));
+            idealDistribution.put(Nominal.of(nominal), (int) ((amount - remainder) / nominal));
             amount = remainder;
         }
         if (amount != 0) { // нет номинала для остатка
@@ -114,11 +113,14 @@ public class AtmImpl implements Atm{
         return idealDistribution;
     }
 
-    private Integer[] getNotes() {
+    /**
+     * @return список доступных в приложении номиналов
+     */
+    private List<Nominal> getAllNominals() {
         return Arrays.stream(Nominal.values())
-                .map(Nominal::getValue)
+                .map(Nominal::get)
                 .sorted(Collections.reverseOrder())
-                .toArray(Integer[]::new);
+                .collect(Collectors.toList());
     }
 
     /**
@@ -135,29 +137,31 @@ public class AtmImpl implements Atm{
      * @param amount запрашиваемая сумма
      * @return необходимое на выдачу количество банкнот каждого номинала или null, если распределение невозможно
      */
-    public List<Integer> getDistributionForRequestedAmount(double amount) {
-        final Integer[] notes = getNotes();
-        List<Integer> idealDistribution = getIdealDistribution(amount);
-
-        List<Integer> distributionReal = new ArrayList<>();
+    private Map<Nominal, Integer> getDistributionForRequestedAmount(double amount) {
+        final List<Nominal> nominals = getAllNominals();
+        Map<Nominal, Integer> idealDistribution = getIdealDistribution(amount);
+        Map<Nominal, Integer> distributionReal = new TreeMap<>();
         int remain = 0;
 
         // алгоритм для всех банкнот, кроме последней
-        for (int i = 0; i < storage.size() - 1; i++) {
-            Nominal nominal = Nominal.of(notes[i]);
-            if (idealDistribution.get(i) + remain <= storage.get(nominal).getCount()) {
-                distributionReal.add(idealDistribution.get(i) + remain);
+        for (int i = 0; i < nominals.size() - 1; i++) {
+            Nominal nominal = nominals.get(i);
+            int count = (storage.containsKey(nominal)) ? storage.get(nominal).getCount() : 0;
+            if (idealDistribution.get(nominal) + remain <= count) {
+                distributionReal.put(nominal, idealDistribution.get(nominal) + remain);
                 remain = 0;
             } else {
-                distributionReal.add(storage.get(nominal).getCount());
-                remain += idealDistribution.get(i) - storage.get(nominal).getCount();
-                remain = remain * (nominal.getValue() / Nominal.of(notes[i + 1]).getValue());
+                distributionReal.put(nominal, count);
+                remain += idealDistribution.get(nominal) - count;
+                remain = remain * (nominal.getValue() / nominals.get(i + 1).getValue());
             }
         }
         // тот же алгоритм для последней банкноты
-        int i = storage.size() - 1;
-        if (idealDistribution.get(i) + remain <= storage.get(Nominal.of(notes[i])).getCount()) {
-            distributionReal.add(idealDistribution.get(i) + remain);
+        int i = nominals.size() - 1;
+        Nominal nominal = nominals.get(i);
+        int count = (storage.containsKey(nominal)) ? storage.get(nominal).getCount() : 0;
+        if (idealDistribution.get(nominal) + remain <= count) {
+            distributionReal.put(nominal, idealDistribution.get(nominal) + remain);
         } else {
             throw new MoneyDistributionException();
         }
