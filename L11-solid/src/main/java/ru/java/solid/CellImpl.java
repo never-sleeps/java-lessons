@@ -8,9 +8,12 @@ import java.util.List;
 
 public class CellImpl implements Cell {
 
+    private final int currentNominal;
     private final List<Nominal> banknotes = new ArrayList<>();
 
-    public CellImpl(List<Nominal> banknotes) {
+    public CellImpl(int nominal, List<Nominal> banknotes) {
+        this.currentNominal = nominal;
+        checkNominal(banknotes);
         this.banknotes.addAll(banknotes);
     }
 
@@ -51,9 +54,8 @@ public class CellImpl implements Cell {
     private void checkNominal(List<Nominal> banknotes) {
         if (!banknotes.isEmpty()) {
             for (Nominal nominal : banknotes) {
-                Nominal currentNominal = this.banknotes.stream().findAny().get();
-                if (nominal.getValue() != currentNominal.getValue()) {
-                    throw new NotSupportedNominalByCellException(nominal, currentNominal);
+                if (nominal.getValue() != this.currentNominal) {
+                    throw new NotSupportedNominalByCellException(nominal, Nominal.of(this.currentNominal));
                 }
             }
         }

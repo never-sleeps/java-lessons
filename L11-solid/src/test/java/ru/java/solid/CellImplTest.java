@@ -20,7 +20,7 @@ class CellImplTest {
         long totalAmount = banknotes.stream().mapToLong(Nominal::getValue).sum();
 
         // when
-        Cell cell = new CellImpl(banknotes);
+        Cell cell = new CellImpl(Nominal.NOMINAL_500.getValue(), banknotes);
 
         // then
         assertThat(cell.getTotalAmount()).isEqualTo(totalAmount);
@@ -39,7 +39,7 @@ class CellImplTest {
         );
         long totalAmount = banknotes.stream().mapToLong(Nominal::getValue).sum() +
                 banknotesForAdding.stream().mapToLong(Nominal::getValue).sum();
-        Cell cell = new CellImpl(banknotes);
+        Cell cell = new CellImpl(Nominal.NOMINAL_500.getValue(), banknotes);
 
         // when
         cell.addBanknote(banknotesForAdding);
@@ -60,12 +60,12 @@ class CellImplTest {
                 Nominal.NOMINAL_100
         );
         long totalAmount = banknotes.stream().mapToLong(Nominal::getValue).sum();
-        Cell cell = new CellImpl(banknotes);
+        Cell cell = new CellImpl(Nominal.NOMINAL_500.getValue(), banknotes);
 
         // when then
         assertThatThrownBy( () -> cell.addBanknote(banknotesForAdding))
                 .isInstanceOf(NotSupportedNominalByCellException.class)
-                .hasMessage("Not supported nominal value: 100 by cell. Available nominal: 500.");
+                .hasMessage("Not supported nominal '100' by cell. Available nominal: '500'.");
 
         assertThat(cell.getTotalAmount()).isEqualTo(totalAmount);
         assertThat(cell.getCount()).isEqualTo(banknotes.size());

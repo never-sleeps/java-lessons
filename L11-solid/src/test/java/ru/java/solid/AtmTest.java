@@ -39,7 +39,9 @@ class AtmTest {
                         Nominal.NOMINAL_100,
 
                         Nominal.NOMINAL_50,
-                        Nominal.NOMINAL_50
+                        Nominal.NOMINAL_50,
+
+                        Nominal.NOMINAL_10
                 )
         );
 
@@ -52,9 +54,10 @@ class AtmTest {
                         entry(Nominal.NOMINAL_500, 500L),
                         entry(Nominal.NOMINAL_200, 400L),
                         entry(Nominal.NOMINAL_100, 100L),
-                        entry(Nominal.NOMINAL_50, 100L)
+                        entry(Nominal.NOMINAL_50, 100L),
+                        entry(Nominal.NOMINAL_10, 10L)
                 );
-        assertThat(atm.getTotalAmount()).isEqualTo(13_100);
+        assertThat(atm.getTotalAmount()).isEqualTo(13_110);
     }
 
     @Test
@@ -97,7 +100,38 @@ class AtmTest {
                         entry(Nominal.NOMINAL_500, 0L),
                         entry(Nominal.NOMINAL_200, 200L),
                         entry(Nominal.NOMINAL_100, 100L),
-                        entry(Nominal.NOMINAL_50, 50L)
+                        entry(Nominal.NOMINAL_50, 50L),
+                        entry(Nominal.NOMINAL_10, 0L)
+                );
+    }
+
+    @Test
+    void withdrawMoney_shouldWithdrawMoneyAndReturnNominalListEvenIfNotAllNominalsExist() {
+        // given
+        atm.depositMoney(
+                List.of(
+                        Nominal.NOMINAL_50,
+                        Nominal.NOMINAL_50,
+                        Nominal.NOMINAL_50
+                )
+        );
+
+        // when
+        List<Nominal> banknotes = atm.withdrawMoney(150);
+
+        // then
+        assertThat(banknotes).hasSize(3);
+        assertThat(atm.getTotalAmount()).isEqualTo(0);
+        assertThat(atm.getAmountByNominal())
+                .containsOnly(
+                        entry(Nominal.NOMINAL_5000, 0L),
+                        entry(Nominal.NOMINAL_2000, 0L),
+                        entry(Nominal.NOMINAL_1000, 0L),
+                        entry(Nominal.NOMINAL_500, 0L),
+                        entry(Nominal.NOMINAL_200, 0L),
+                        entry(Nominal.NOMINAL_100, 0L),
+                        entry(Nominal.NOMINAL_50, 0L),
+                        entry(Nominal.NOMINAL_10, 0L)
                 );
     }
 
