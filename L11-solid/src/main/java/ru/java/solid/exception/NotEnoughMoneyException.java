@@ -1,6 +1,6 @@
 package ru.java.solid.exception;
 
-public class NotEnoughMoneyException extends RuntimeException {
+public class NotEnoughMoneyException extends AtmException {
 
     public NotEnoughMoneyException(long requestedAmount, long availableAmount) {
         super(String.format(
