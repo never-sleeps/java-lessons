@@ -3,21 +3,19 @@ package ru.java.processor;
 import ru.java.exception.EvenSecondException;
 import ru.java.model.Message;
 
-import java.time.LocalDateTime;
-
 /**
  * Процессор, который выбрасывает исключение в четную секунду
  */
-public class ProcessorEvenSecondThrow implements Processor {
+public class ProcessorThrowEvenSecondException implements Processor {
 
-    private final LocalDateTime dateTime;
+    private final DateTimeProvider dateTimeProvider;
 
-    public ProcessorEvenSecondThrow(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public ProcessorThrowEvenSecondException(DateTimeProvider dateTimeProvider) {
+        this.dateTimeProvider = dateTimeProvider;
     }
 
-    public boolean isEvenSecond() {
-        return dateTime.getSecond() % 2 == 0;
+    private boolean isEvenSecond() {
+        return dateTimeProvider.getDataTime().getSecond() % 2 == 0;
     }
 
     @Override

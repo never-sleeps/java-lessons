@@ -5,7 +5,7 @@ import ru.java.listener.HistoryListener;
 import ru.java.listener.ListenerPrinterConsole;
 import ru.java.model.Message;
 import ru.java.processor.LoggerProcessor;
-import ru.java.processor.ProcessorEvenSecondThrow;
+import ru.java.processor.ProcessorThrowEvenSecondException;
 import ru.java.processor.ProcessorSwapFields11And12;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public class HomeWork {
     public static void main(String[] args) {
         var processors = List.of(
                 new ProcessorSwapFields11And12(),
-                new LoggerProcessor(new ProcessorEvenSecondThrow(LocalDateTime.now()))
+                new LoggerProcessor(new ProcessorThrowEvenSecondException(LocalDateTime::now))
         );
 
         var complexProcessor = new ComplexProcessor(processors, ex -> {});

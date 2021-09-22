@@ -1,4 +1,4 @@
-package ru.java.processor.homework;
+package ru.java.processor;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -6,16 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.java.exception.EvenSecondException;
 import ru.java.model.Message;
-import ru.java.processor.ProcessorEvenSecondThrow;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+class ProcessorThrowEvenSecondExceptionTest {
 
-class ProcessorEvenSecondThrowTest {
-
-    private final LocalDateTime currentDateTime = Mockito.mock(LocalDateTime.class);
-    private final ProcessorEvenSecondThrow processorEvenSecondThrow = new ProcessorEvenSecondThrow(currentDateTime);
+    private final DateTimeProvider dateTimeProvider = Mockito.mock(DateTimeProvider.class);
+    private final ProcessorThrowEvenSecondException processor = new ProcessorThrowEvenSecondException(dateTimeProvider);
 
     @Test
     @DisplayName("Процессор выбрасывает исключение на чётной секунде")
@@ -23,11 +20,12 @@ class ProcessorEvenSecondThrowTest {
         // given
         var message = new Message.Builder(1L).build();
         int evenSecond = 0;
-        Mockito.when(currentDateTime.getSecond()).thenReturn(evenSecond);
+        LocalDateTime currentTime = LocalDateTime.of(2020, 1, 1, 0, 0, evenSecond);
+        Mockito.when(dateTimeProvider.getDataTime()).thenReturn(currentTime);
 
         // when // then
-        assertThatExceptionOfType(EvenSecondException.class).isThrownBy(
-                () -> processorEvenSecondThrow.process(message));
+        Assertions.assertThatExceptionOfType(EvenSecondException.class).isThrownBy(
+                () -> processor.process(message));
     }
 
     @Test
@@ -36,9 +34,10 @@ class ProcessorEvenSecondThrowTest {
         // given
         var message = new Message.Builder(1L).build();
         int oddSecond = 1;
-        Mockito.when(currentDateTime.getSecond()).thenReturn(oddSecond);
+        LocalDateTime currentTime = LocalDateTime.of(2020, 1, 1, 0, 0, oddSecond);
+        Mockito.when(dateTimeProvider.getDataTime()).thenReturn(currentTime);
 
         // when // then
-        Assertions.assertThat(processorEvenSecondThrow.process(message)).isNotNull();
+        Assertions.assertThat(processor.process(message)).isNotNull();
     }
 }
