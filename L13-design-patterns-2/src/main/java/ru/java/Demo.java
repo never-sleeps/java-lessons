@@ -11,7 +11,7 @@ import ru.java.processor.ProcessorSwapFields11And12;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class HomeWork {
+public class Demo {
 
     public static void main(String[] args) {
         var processors = List.of(
