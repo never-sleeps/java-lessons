@@ -40,11 +40,7 @@ public class Message implements Cloneable {
 
     @Override
     public Message clone() {
-        return new Message(
-                this.id, this.field1, this.field2, this.field3, this.field4, this.field5,
-                this.field6, this.field7, this.field8, this.field9, this.field10,
-                this.field11, this.field12, this.field13 == null ? null : this.field13.clone()
-        );
+        return this.toBuilder().build();
     }
 
     public long getId() {
@@ -119,7 +115,7 @@ public class Message implements Cloneable {
     }
 
     public Builder toBuilder() {
-        return new Builder(id, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11, field12, field13);
+        return new Builder(id, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11, field12, this.field13 == null ? null : this.field13.clone());
     }
 
     @Override
