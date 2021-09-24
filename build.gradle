@@ -34,6 +34,8 @@ allprojects {
             dependency("org.openjdk.jmh:jmh-core:${Versions.jmh}")
             dependency("org.openjdk.jmh:jmh-generator-annprocess:${Versions.jmh}")
             dependency("org.ow2.asm:asm-commons:${Versions.asm}")
+            dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
+            dependency("com.google.protobuf:protobuf-java-util:${Versions.protobuf}")
         }
     }
 
@@ -49,6 +51,7 @@ allprojects {
             force("org.codehaus.jackson:jackson-mapper-asl:1.8.3")
             force("org.codehaus.jettison:jettison:1.1")
             force("net.java.dev.jna:jna:5.8.0")
+            force("com.google.errorprone:error_prone_annotations:2.5.1")
         }
     }
 }
