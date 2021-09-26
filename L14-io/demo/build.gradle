@@ -13,6 +13,10 @@ dependencies {
     implementation 'javax.json:javax.json-api'
     implementation 'org.glassfish:javax.json'
     implementation 'com.google.protobuf:protobuf-java-util'
+
+    implementation 'javax.xml.bind:jaxb-api'
+    implementation 'javax.activation:activation:1.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime'
 }
 
 def protoSrcDir = "$projectDir/build/generated"
