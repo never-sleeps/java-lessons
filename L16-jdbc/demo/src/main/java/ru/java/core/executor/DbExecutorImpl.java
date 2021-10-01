@@ -1,6 +1,4 @@
-package ru.java.executor.executor;
-
-import ru.java.executor.DataBaseOperationException;
+package ru.java.core.executor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

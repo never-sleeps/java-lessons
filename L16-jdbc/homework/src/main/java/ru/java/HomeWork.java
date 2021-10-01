@@ -3,16 +3,15 @@ package ru.java;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.java.crm.repository.executor.DbExecutorImpl;
-import ru.java.crm.sessionmanager.TransactionRunnerJdbc;
-import ru.java.crm.datasource.DriverManagerDataSource;
-import ru.java.crm.model.Client;
-import ru.java.crm.model.Manager;
-import ru.java.crm.service.DbServiceClientImpl;
-import ru.java.crm.service.DbServiceManagerImpl;
-import ru.java.jdbc.mapper.EntityClassMetaData;
-import ru.java.jdbc.mapper.EntitySQLMetaData;
-import ru.java.jdbc.mapper.DataTemplateJdbc;
+import ru.java.core.datasource.DriverManagerDataSource;
+import ru.java.core.executor.DbExecutorImpl;
+import ru.java.jdbc.mapper.*;
+import ru.java.model.Client;
+import ru.java.model.Manager;
+import ru.java.repository.DataTemplateJdbc;
+import ru.java.service.DbServiceClientImpl;
+import ru.java.service.DbServiceManagerImpl;
+import ru.java.core.sessionmanager.TransactionRunnerJdbc;
 
 import javax.sql.DataSource;
 
@@ -24,18 +23,22 @@ public class HomeWork {
     private static final Logger log = LoggerFactory.getLogger(HomeWork.class);
 
     public static void main(String[] args) {
-// Общая часть
+        // Общая часть
         var dataSource = new DriverManagerDataSource(URL, USER, PASSWORD);
         flywayMigrations(dataSource);
         var transactionRunner = new TransactionRunnerJdbc(dataSource);
         var dbExecutor = new DbExecutorImpl();
 
-// Работа с клиентом
-        EntityClassMetaData entityClassMetaDataClient; // = new EntityClassMetaDataImpl();
-        EntitySQLMetaData entitySQLMetaDataClient = null; //= new EntitySQLMetaDataImpl();
-        var dataTemplateClient = new DataTemplateJdbc<Client>(dbExecutor, entitySQLMetaDataClient); //реализация DataTemplate, универсальная
+        // Работа с Client
+        EntityClassMetaData<Client> entityClassMetaDataClient = new EntityClassMetaDataImpl<>(Client.class);
+        EntitySQLMetaData entitySQLMetaDataClient = new EntitySQLMetaDataImpl(entityClassMetaDataClient);
+        var dataTemplateClient = new DataTemplateJdbc<Client>(
+                dbExecutor,
+                entitySQLMetaDataClient,
+                entityClassMetaDataClient
+        );
 
-// Код дальше должен остаться
+        // Слой Service (непосредственно сохранение клиентов в бд и получение их из бд)
         var dbServiceClient = new DbServiceClientImpl(transactionRunner, dataTemplateClient);
         dbServiceClient.saveClient(new Client("dbServiceFirst"));
 
@@ -44,12 +47,16 @@ public class HomeWork {
                 .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecond.getId()));
         log.info("clientSecondSelected:{}", clientSecondSelected);
 
-// Сделайте тоже самое с классом Manager (для него надо сделать свою таблицу)
+        // Работа с Manager
+        EntityClassMetaData<Manager> entityClassMetaDataManager = new EntityClassMetaDataImpl<>(Manager.class);
+        EntitySQLMetaData entitySQLMetaDataManager = new EntitySQLMetaDataImpl(entityClassMetaDataManager);
+        var dataTemplateManager = new DataTemplateJdbc<Manager>(
+                dbExecutor,
+                entitySQLMetaDataManager,
+                entityClassMetaDataManager
+        );
 
-        EntityClassMetaData entityClassMetaDataManager; // = new EntityClassMetaDataImpl();
-        EntitySQLMetaData entitySQLMetaDataManager = null; //= new EntitySQLMetaDataImpl();
-        var dataTemplateManager = new DataTemplateJdbc<Manager>(dbExecutor, entitySQLMetaDataManager);
-
+        // Слой Service (непосредственно сохранение клиентов в бд и получение их из бд)
         var dbServiceManager = new DbServiceManagerImpl(transactionRunner, dataTemplateManager);
         dbServiceManager.saveManager(new Manager("ManagerFirst"));
 
@@ -67,6 +74,5 @@ public class HomeWork {
                 .load();
         flyway.migrate();
         log.info("db migration finished.");
-        log.info("***");
     }
 }

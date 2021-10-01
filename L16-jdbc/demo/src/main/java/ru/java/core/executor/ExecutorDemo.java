@@ -1,10 +1,9 @@
-package ru.java.executor;
+package ru.java.core.executor;
 
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.java.executor.datasource.DriverManagerDataSource;
-import ru.java.executor.executor.DbExecutorImpl;
+import ru.java.core.executor.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -12,6 +11,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Перед запуском необходимо запустить базу данных:
+ * 1) open in terminal L16-jdbc/docker
+ * 2) run command: ./runDb.src
+ */
 public class ExecutorDemo {
     private static final String URL = "jdbc:postgresql://localhost:5430/demoDB";
     private static final String USER = "usr";

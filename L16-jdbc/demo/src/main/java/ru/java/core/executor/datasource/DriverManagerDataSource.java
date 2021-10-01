@@ -1,4 +1,4 @@
-package ru.java.executor.datasource;
+package ru.java.core.executor.datasource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -26,9 +26,10 @@ public class DriverManagerDataSource implements DataSource {
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        var connection = DriverManager.getConnection(url, username, password);
-        connection.setAutoCommit(false);
-        return connection;
+        try(var connection = DriverManager.getConnection(url, username, password)) {
+            connection.setAutoCommit(false);
+            return connection;
+        }
     }
 
     @Override

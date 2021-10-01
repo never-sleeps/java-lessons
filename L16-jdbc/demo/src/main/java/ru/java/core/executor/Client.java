@@ -1,4 +1,4 @@
-package ru.java.executor;
+package ru.java.core.executor;
 
 public class Client {
     private Long id;
