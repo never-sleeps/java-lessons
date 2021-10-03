@@ -15,12 +15,12 @@ import ru.java.core.sessionmanager.TransactionRunnerJdbc;
 
 import javax.sql.DataSource;
 
-public class HomeWork {
+public class Application {
     private static final String URL = "jdbc:postgresql://localhost:5430/demoDB";
     private static final String USER = "usr";
     private static final String PASSWORD = "pwd";
 
-    private static final Logger log = LoggerFactory.getLogger(HomeWork.class);
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         // Общая часть

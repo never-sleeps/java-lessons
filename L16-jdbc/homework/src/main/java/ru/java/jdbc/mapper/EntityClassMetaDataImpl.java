@@ -17,9 +17,25 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private static final Logger logger = LoggerFactory.getLogger(EntityClassMetaDataImpl.class);
 
     private final Class<T> clazz;
+    private final Constructor<T> constructor;
+    private final List<Field> fields;
+    private final Field idField;
 
     public EntityClassMetaDataImpl(Class<T> clazz) {
-        this.clazz = clazz;
+        try {
+            this.clazz = clazz;
+            this.constructor = clazz.getConstructor();
+            this.fields = Arrays.stream(clazz.getDeclaredFields())
+                    .sorted(Comparator.comparing(Field::getName))
+                    .collect(Collectors.toList());
+            this.idField = fields.stream()
+                    .filter(it -> it.isAnnotationPresent(Id.class))
+                    .findFirst()
+                    .orElseThrow(RuntimeException::new);
+        } catch (Exception e) {
+            logger.error("Entity class initialization exception", e);
+            throw new EntityClassInitializationException("Entity class initialization exception", e);
+        }
     }
 
     @Override
@@ -29,32 +45,22 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public Constructor<T> getConstructor() {
-        try {
-            return clazz.getConstructor();
-        } catch (NoSuchMethodException e) {
-            logger.error("Entity class initialization exception: missing constructor", e);
-            throw new EntityClassInitializationException("Entity class initialization exception: missing constructor");
-        }
+        return constructor;
     }
 
     @Override
     public Field getIdField() {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .filter(it -> it.isAnnotationPresent(Id.class))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
+        return idField;
     }
 
     @Override
     public List<Field> getAllFields() {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .sorted(Comparator.comparing(Field::getName))
-                .collect(Collectors.toList());
+        return fields;
     }
 
     @Override
     public List<Field> getFieldsWithoutId() {
-        return Arrays.stream(clazz.getDeclaredFields())
+        return fields.stream()
                 .filter(it -> !it.isAnnotationPresent(Id.class))
                 .sorted(Comparator.comparing(Field::getName))
                 .collect(Collectors.toList());
