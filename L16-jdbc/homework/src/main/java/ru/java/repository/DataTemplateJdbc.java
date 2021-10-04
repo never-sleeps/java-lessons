@@ -83,6 +83,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
     public void update(Connection connection, T object) {
         try {
             var objectFieldsValues = extractObjectFieldsValues(object);
+            objectFieldsValues.add(extractObjectIdFieldValue(object));
             dbExecutor.executeStatement(
                     connection,
                     entitySQLMetaData.getUpdateSql(),
@@ -114,5 +115,11 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
             objectFieldsValues.add(field.get(object));
         }
         return objectFieldsValues;
+    }
+
+    private Object extractObjectIdFieldValue(T object) throws IllegalAccessException {
+        var idField = entityClassMetaData.getIdField();
+        idField.setAccessible(true);
+        return idField.get(object);
     }
 }

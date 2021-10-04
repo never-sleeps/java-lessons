@@ -37,16 +37,30 @@ public class Application {
                 entitySQLMetaDataClient,
                 entityClassMetaDataClient
         );
-
         // Слой Service (непосредственно сохранение клиентов в бд и получение их из бд)
         var dbServiceClient = new DbServiceClientImpl(transactionRunner, dataTemplateClient);
-        dbServiceClient.saveClient(new Client("dbServiceFirst"));
 
-        var clientSecond = dbServiceClient.saveClient(new Client("dbServiceSecond"));
-        var clientSecondSelected = dbServiceClient.getClient(clientSecond.getId())
-                .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecond.getId()));
-        log.info("clientSecondSelected:{}", clientSecondSelected);
+        // Сохранение, обновление и получение клиента
+        var firstClient = dbServiceClient.saveClient(new Client("John 1"));
+        dbServiceClient.getClient(firstClient.getId())
+                .orElseThrow(() -> new RuntimeException("Client not found, id:" + firstClient.getId()));
+        firstClient.setName("John 2");
+        dbServiceClient.saveClient(firstClient);
+        dbServiceClient.getClient(firstClient.getId())
+                .orElseThrow(() -> new RuntimeException("Client not found, id:" + firstClient.getId()));
+        System.out.println();
 
+        // Сохранение, обновление и получение клиента
+        var secondClient = dbServiceClient.saveClient(new Client("Anna 1"));
+        dbServiceClient.getClient(secondClient.getId())
+                .orElseThrow(() -> new RuntimeException("Client not found, id:" + secondClient.getId()));
+        secondClient.setName("Anna 2");
+        dbServiceClient.saveClient(secondClient);
+        dbServiceClient.getClient(firstClient.getId())
+                .orElseThrow(() -> new RuntimeException("Client not found, id:" + firstClient.getId()));
+        System.out.println();
+
+        //--------------------------------------------------------------------------------------------
         // Работа с Manager
         EntityClassMetaData<Manager> entityClassMetaDataManager = new EntityClassMetaDataImpl<>(Manager.class);
         EntitySQLMetaData entitySQLMetaDataManager = new EntitySQLMetaDataImpl(entityClassMetaDataManager);
@@ -55,15 +69,28 @@ public class Application {
                 entitySQLMetaDataManager,
                 entityClassMetaDataManager
         );
-
         // Слой Service (непосредственно сохранение клиентов в бд и получение их из бд)
         var dbServiceManager = new DbServiceManagerImpl(transactionRunner, dataTemplateManager);
-        dbServiceManager.saveManager(new Manager("ManagerFirst"));
 
-        var managerSecond = dbServiceManager.saveManager(new Manager("ManagerSecond"));
-        var managerSecondSelected = dbServiceManager.getManager(managerSecond.getNo())
-                .orElseThrow(() -> new RuntimeException("Manager not found, id:" + managerSecond.getNo()));
-        log.info("managerSecondSelected:{}", managerSecondSelected);
+        // Сохранение, обновление и получение менеджера
+        var firstManager = dbServiceManager.saveManager(new Manager("ManagerFirst"));
+        dbServiceManager.getManager(firstManager.getNo())
+                .orElseThrow(() -> new RuntimeException("Manager not found, id:" + firstManager.getNo()));
+        firstManager.setParam1("param for first manager");
+        dbServiceManager.saveManager(firstManager);
+        dbServiceManager.getManager(firstManager.getNo())
+                .orElseThrow(() -> new RuntimeException("Manager not found, id:" + firstManager.getNo()));
+        System.out.println();
+
+        // Сохранение, обновление и получение менеджера
+        var secondManager = dbServiceManager.saveManager(new Manager("ManagerSecond"));
+        dbServiceManager.getManager(secondManager.getNo())
+                .orElseThrow(() -> new RuntimeException("Manager not found, id:" + secondManager.getNo()));
+        secondManager.setParam1("param for second manager");
+        dbServiceManager.saveManager(secondManager);
+        dbServiceManager.getManager(secondManager.getNo())
+                .orElseThrow(() -> new RuntimeException("Manager not found, id:" + secondManager.getNo()));
+        System.out.println();
     }
 
     private static void flywayMigrations(DataSource dataSource) {

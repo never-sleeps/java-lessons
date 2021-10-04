@@ -20,6 +20,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private final Constructor<T> constructor;
     private final List<Field> fields;
     private final Field idField;
+    private final List<Field> fieldsWithoutId;
 
     public EntityClassMetaDataImpl(Class<T> clazz) {
         try {
@@ -32,6 +33,10 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
                     .filter(it -> it.isAnnotationPresent(Id.class))
                     .findFirst()
                     .orElseThrow(RuntimeException::new);
+            this.fieldsWithoutId = fields.stream()
+                    .filter(it -> !it.isAnnotationPresent(Id.class))
+                    .sorted(Comparator.comparing(Field::getName))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error("Entity class initialization exception", e);
             throw new EntityClassInitializationException("Entity class initialization exception", e);
@@ -60,9 +65,6 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public List<Field> getFieldsWithoutId() {
-        return fields.stream()
-                .filter(it -> !it.isAnnotationPresent(Id.class))
-                .sorted(Comparator.comparing(Field::getName))
-                .collect(Collectors.toList());
+        return fieldsWithoutId;
     }
 }

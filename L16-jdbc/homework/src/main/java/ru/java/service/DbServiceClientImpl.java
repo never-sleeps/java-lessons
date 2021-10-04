@@ -39,7 +39,7 @@ public class DbServiceClientImpl implements DBServiceClient {
     public Optional<Client> getClient(long id) {
         return transactionRunner.doInTransaction(connection -> {
             var clientOptional = clientDataTemplate.findById(connection, id);
-            log.info("client: {}", clientOptional);
+            log.info("received client: {}", clientOptional);
             return clientOptional;
         });
     }
@@ -48,7 +48,7 @@ public class DbServiceClientImpl implements DBServiceClient {
     public List<Client> findAll() {
         return transactionRunner.doInTransaction(connection -> {
             var clientList = clientDataTemplate.findAll(connection);
-            log.info("clientList:{}", clientList);
+            log.info("received clientList:{}", clientList);
             return clientList;
        });
     }

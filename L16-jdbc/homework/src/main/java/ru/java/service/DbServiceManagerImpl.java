@@ -39,7 +39,7 @@ public class DbServiceManagerImpl implements DBServiceManager {
     public Optional<Manager> getManager(long no) {
         return transactionRunner.doInTransaction(connection -> {
             var managerOptional = managerDataTemplate.findById(connection, no);
-            log.info("manager: {}", managerOptional);
+            log.info("received manager: {}", managerOptional);
             return managerOptional;
         });
     }
