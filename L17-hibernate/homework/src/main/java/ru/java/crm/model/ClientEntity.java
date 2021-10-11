@@ -39,6 +39,7 @@ public class ClientEntity implements Cloneable {
     public ClientEntity(String name, AddressEntity address, List<PhoneEntity> phones) {
         this.name = name;
         this.address = address;
+        phones.forEach(phone -> phone.setClient(this));
         this.phones = phones;
     }
 
@@ -84,6 +85,7 @@ public class ClientEntity implements Cloneable {
     }
 
     public void setPhones(List<PhoneEntity> phones) {
+        phones.forEach(phone -> phone.setClient(this));
         this.phones = phones;
     }
 

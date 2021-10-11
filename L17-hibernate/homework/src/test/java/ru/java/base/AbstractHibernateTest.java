@@ -17,7 +17,7 @@ import ru.java.crm.model.PhoneEntity;
 import ru.java.crm.service.DBServiceClient;
 import ru.java.crm.service.DbServiceClientImpl;
 
-import static ru.java.demo.DbServiceDemo.HIBERNATE_CFG_FILE;
+import static ru.java.ApplicationDemo.HIBERNATE_CFG_FILE;
 
 
 public abstract class AbstractHibernateTest {

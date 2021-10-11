@@ -1,4 +1,4 @@
-package ru.java.demo;
+package ru.java;
 
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
@@ -14,16 +14,15 @@ import ru.java.crm.service.DbServiceClientImpl;
 
 import java.util.Arrays;
 
-public class DbServiceDemo {
+public class ApplicationDemo {
 
-    private static final Logger log = LoggerFactory.getLogger(DbServiceDemo.class);
+    private static final Logger log = LoggerFactory.getLogger(ApplicationDemo.class);
 
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     public static void main(String[] args) {
         var configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
         executeMigrations(configuration);
-
         var sessionFactory = HibernateUtils.buildSessionFactory(
                 configuration,
                 ClientEntity.class,
@@ -32,10 +31,10 @@ public class DbServiceDemo {
         );
 
         var transactionManager = new TransactionManagerHibernate(sessionFactory);
-///
         var clientTemplate = new DataTemplateHibernate<>(ClientEntity.class);
-///
+
         var dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
+
         AddressEntity address = new AddressEntity("077", "Москва", "Цветной бульвар", "35/1");
         PhoneEntity phone1 = new PhoneEntity("123456789");
         PhoneEntity phone2 = new PhoneEntity("987654321");
