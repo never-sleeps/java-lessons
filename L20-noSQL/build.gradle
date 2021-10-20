@@ -1,0 +1,11 @@
+plugins {
+    id 'idea'
+}
+
+allprojects {
+    group "ru.java"
+
+    repositories {
+        mavenCentral()
+    }
+}
