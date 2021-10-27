@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.http.HttpStatus;
 import ru.java.hibernate.crm.model.ClientEntity;
 import ru.java.hibernate.crm.service.DBServiceClient;
 
@@ -13,8 +14,6 @@ import java.io.IOException;
 
 
 public class ClientApiServlet extends HttpServlet {
-
-    private static final int ID_PATH_PARAM_POSITION = 1;
 
     private final Gson gson;
     private final DBServiceClient dbServiceClient;
@@ -29,12 +28,6 @@ public class ClientApiServlet extends HttpServlet {
         BufferedReader reader = req.getReader();
         ClientEntity client = gson.fromJson(reader, ClientEntity.class);
         dbServiceClient.saveClient(client);
+        resp.setStatus(HttpStatus.CREATED_201);
     }
-
-    private long extractIdFromRequest(HttpServletRequest request) {
-        String[] path = request.getPathInfo().split("/");
-        String id = (path.length > 1) ? path[ID_PATH_PARAM_POSITION] : String.valueOf(-1);
-        return Long.parseLong(id);
-    }
-
 }

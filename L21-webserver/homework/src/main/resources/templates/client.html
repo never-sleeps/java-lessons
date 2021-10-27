@@ -26,12 +26,14 @@
                     'Content-Type': 'application/json;charset=UTF-8'
                 }
             });
+            alert("Пользователь успешно добавлен");
             document.getElementById("clientLogin").value = "";
             document.getElementById("clientPassword").value = "";
             document.getElementById("clientPhone").value = "";
             document.getElementById("clientCity").value = "Москва";
             document.getElementById("clientStreet").value = "Арбат";
             document.getElementById("clientHouse").value = "1";
+            location.reload();
         }
     </script>
 </head>
