@@ -22,12 +22,12 @@ create table client
     id         bigint       not null primary key,
     login      varchar(255) not null,
     password   varchar(255) not null,
-    address_id int8
+    address_id bigint REFERENCES address(id)
 );
 
 create table phone
 (
     id        bigint       not null primary key,
     number    varchar(255) not null,
-    client_id int8
+    client_id bigint NOT NULL REFERENCES client(id)
 );
