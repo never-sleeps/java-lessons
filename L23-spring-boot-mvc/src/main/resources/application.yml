@@ -1,0 +1,6 @@
+server:
+  port: 8080
+app:
+  client-list-page:
+    msg: Первый текст из application.yml
+    msg2: ${app.client-list-page.msg} объединён со вторым
