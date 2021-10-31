@@ -2,15 +2,15 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_15
-targetCompatibility = JavaVersion.VERSION_15
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
     dependencies {
         implementation 'ch.qos.logback:logback-classic'
-        implementation 'org.flywaydb:flyway-core'
+        implementation ("org.flywaydb:flyway-core:${Versions.flyway}")
         implementation("com.zaxxer:HikariCP")
-        implementation 'org.postgresql:postgresql'
+        implementation ("org.postgresql:postgresql:${Versions.postgresql}")
 
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.jupiter:junit-jupiter-params")

@@ -4,11 +4,11 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_15
-targetCompatibility = JavaVersion.VERSION_15
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-    implementation 'com.google.guava:guava'
+    implementation("com.google.guava:guava:${Versions.guava}")
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'javax.json:javax.json-api'
     implementation 'org.glassfish:javax.json'

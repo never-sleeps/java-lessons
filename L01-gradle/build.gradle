@@ -4,12 +4,12 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
-sourceCompatibility = JavaVersion.VERSION_15
-targetCompatibility = JavaVersion.VERSION_15
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
     // This dependency is used by the application.
-    implementation 'com.google.guava:guava'
+    implementation("com.google.guava:guava:${Versions.guava}")
 }
 
 shadowJar {
