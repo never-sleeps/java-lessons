@@ -1,0 +1,9 @@
+package ru.java.appcontainer.api;
+
+/**
+ * Аналог ApplicationContext из Spring (org.springframework.context.ApplicationContext)
+ */
+public interface AppComponentsContainer {
+    <C> C getAppComponent(Class<C> componentClass);
+    <C> C getAppComponent(String componentName);
+}
