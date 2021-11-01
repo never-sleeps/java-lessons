@@ -15,6 +15,6 @@
 ---------------
 
 2.Chat (with websockets)  
-<img alt="chat" src="readme/chat.png" width="350">
+<img alt="chat" src="readme/chat.png" width="800">
  
  
