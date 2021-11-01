@@ -49,7 +49,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     private void processConfig(Class<?>... configClasses) {
         try {
             checkConfigClasses(configClasses);
-            parseConfigClasses(configClasses);
+            fillContextWithConfigClasses(configClasses);
         } catch (Exception e) {
             throw new ApplicationContextInitializationException(e);
         }
@@ -59,21 +59,21 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
      * Инициализация компонентов (бинов) из @AppComponentsContainerConfig-классов [configClasses]
      * согласно order для @AppComponentsContainerConfig и order для @AppComponent
      */
-    private void parseConfigClasses(Class<?>[] configClasses) throws ReflectiveOperationException {
+    private void fillContextWithConfigClasses(Class<?>[] configClasses) throws ReflectiveOperationException {
         // AppComponentsContainerConfig-классы, отсортированные согласно order
         var configClassesSortedByOrder = Arrays.stream(configClasses)
                 .sorted(Comparator.comparingInt(it -> it.getAnnotation(AppComponentsContainerConfig.class).order()))
                 .collect(Collectors.toList());
 
         for (var configClass : configClassesSortedByOrder) {
-            parseConfigClass(configClass);
+            fillContextWithConfigClass(configClass);
         }
     }
 
     /**
      * Инициализация компонентов (бинов) из @AppComponentsContainerConfig-класса [configClass]
      */
-    private void parseConfigClass(Class<?> configClass) throws ReflectiveOperationException {
+    private void fillContextWithConfigClass(Class<?> configClass) throws ReflectiveOperationException {
         // AppComponent-методы конфиг-класса, отсортированные согласно order
         var sortedMethods = Arrays.stream(configClass.getMethods())
                 .filter(it -> it.isAnnotationPresent(AppComponent.class))
