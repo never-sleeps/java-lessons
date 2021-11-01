@@ -1,4 +1,4 @@
-package ru.java.mainpackage.service;
+package ru.java.service;
 
 import java.util.Map;
 

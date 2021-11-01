@@ -1,4 +1,4 @@
-package ru.java.mainpackage.controller;
+package ru.java.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.java.mainpackage.config.AppConfigForBean;
-import ru.java.mainpackage.service.GreetingService;
+import ru.java.config.AppConfigBeanByValue;
+import ru.java.config.ApplicationConfigForConfigProps;
+import ru.java.service.GreetingService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 
-@WebMvcTest({GreetingController.class,  GreetingControllerRstyle.class})
+@WebMvcTest({GreetingController.class,  GreetingControllerRestStyle.class})
 class GreetingControllerTest {
 
     @Autowired
@@ -28,8 +29,11 @@ class GreetingControllerTest {
     @MockBean
     private GreetingService greetingService;
 
-    @MockBean(name = "messageConfig")
-    AppConfigForBean appConfigForBean;
+    @MockBean(name = "appConfigByValue")
+    AppConfigBeanByValue appConfigBeanByValue;
+
+    @MockBean
+    ApplicationConfigForConfigProps props;
 
     @Test
     void sayHelloTest() throws Exception {

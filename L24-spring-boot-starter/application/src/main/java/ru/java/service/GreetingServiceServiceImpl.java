@@ -1,4 +1,4 @@
-package ru.java.mainpackage.service;
+package ru.java.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ public class GreetingServiceServiceImpl implements GreetingService {
     @PostConstruct
     public void printHello() {
         logger.info("Hello from PostConstruct");
-
     }
 
     @Override

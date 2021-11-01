@@ -1,9 +1,9 @@
-package ru.java.mainpackage.config;
+package ru.java.config;
 
-public class AppConfigForBean {
+public class AppConfigBeanByValue {
     private final String paramName;
 
-    public AppConfigForBean(String paramName) {
+    public AppConfigBeanByValue(String paramName) {
         this.paramName = paramName;
     }
 

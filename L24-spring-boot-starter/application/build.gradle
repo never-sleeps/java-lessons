@@ -12,7 +12,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.springfox:springfox-boot-starter'
 
-    implementation 'ru.java:messager-starter:1.0:all'
+    implementation 'ru.java:messager-starter:1.0:all' // подключение самописного стартера
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

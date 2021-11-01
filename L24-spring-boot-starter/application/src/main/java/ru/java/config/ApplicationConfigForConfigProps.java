@@ -1,11 +1,12 @@
-package ru.java.mainpackage.config;
+package ru.java.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "application")
-public class AppConfigForConfigProps {
+public class ApplicationConfigForConfigProps {
 
     private String message;
+    private String paramName;
 
     public String getMessage() {
         return message;
@@ -15,4 +16,11 @@ public class AppConfigForConfigProps {
         this.message = message;
     }
 
+    public String getParamName() {
+        return paramName;
+    }
+
+    public void setParamName(String paramName) {
+        this.paramName = paramName;
+    }
 }

@@ -12,7 +12,7 @@ import ru.java.MessagerConfig;
 
 
 @Configuration
-@ConditionalOnClass(Messager.class)
+@ConditionalOnClass(Messager.class) // будет срабатывать, когда в classpath'е есть класс  Messager
 @EnableConfigurationProperties(Props.class)
 public class MessagerAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(MessagerAutoConfiguration.class);
@@ -24,6 +24,10 @@ public class MessagerAutoConfiguration {
     }
 
     @Bean
+    // @ConditionalOnMissingBean  - если нет бина MessagerConfig, он будет создан.
+    // Эту аннотацию можно и не использовать, но тогда у пользователя стартера не будет возможности исключить
+    // использование этого бина (например, через exclude), что не очень корректно по отношению к пользователю,
+    // поскольку мы лишим его возможности использовать его собственный бин MessagerConfig
     @ConditionalOnMissingBean
     public MessagerConfig messagerConfig() {
         var message = props.getMessage() == null ? "default message" : props.getMessage();
