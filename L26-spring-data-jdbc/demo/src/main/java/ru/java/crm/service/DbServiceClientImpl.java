@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.java.crm.model.Client;
-import ru.java.transactionmanager.TransactionManager;
+import ru.java.transaction.TransactionManager;
 import ru.java.crm.repository.ClientRepository;
 
 import java.util.ArrayList;

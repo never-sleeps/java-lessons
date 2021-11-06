@@ -1,4 +1,4 @@
-package ru.java.transactionmanager;
+package ru.java.transaction;
 
 import java.util.function.Supplier;
 

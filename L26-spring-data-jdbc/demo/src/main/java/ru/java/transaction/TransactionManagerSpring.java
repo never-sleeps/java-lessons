@@ -1,4 +1,4 @@
-package ru.java.transactionmanager;
+package ru.java.transaction;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

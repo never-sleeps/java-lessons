@@ -1,4 +1,4 @@
-package ru.java.transactionmanager;
+package ru.java.transaction;
 
 /**
  * С помощью применения TransactionManager уходим от использования SELF_INJECT для сохранения транзакционности

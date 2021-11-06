@@ -3,7 +3,7 @@ package ru.java.crm.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.java.transactionmanager.TransactionManager;
+import ru.java.transaction.TransactionManager;
 import ru.java.crm.model.Manager;
 import ru.java.crm.repository.ManagerRepository;
 
