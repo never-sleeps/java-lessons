@@ -28,4 +28,6 @@ public interface Versions {
     String stomp = "2.3.3-1";
     String bootstrap = "4.4.1-1";
     String swagger = "3.0.0";
+
+    String jsr305 = "3.0.2";
 }
