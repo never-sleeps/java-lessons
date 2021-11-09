@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create client</title>
+    <style type="text/css">
+        body {
+            padding: 20px;
+        }
+        label {
+            display: inline-block;
+            width: 80px;
+        }
+        input:read-only {
+            background: lightgray;
+        }
+        .row {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+<form id="create-form" th:action="@{/client/save}" th:object="${client}" th:method="post" accept-charset="utf-8">
+    <h3>New Client:</h3>
+
+    <div class="row">
+        <label for="clientLogin">Login:</label>
+        <input id="clientLogin" name="login" type="text" th:value="${client.login}" required/>
+    </div>
+
+    <div class="row">
+        <label for="clientPassword">Password:</label>
+        <input id="clientPassword" name="password" type="password" th:value="${client.password}" required/>
+    </div>
+
+    <div class="row">
+        <label for="phone">Phone:</label>
+        <input id="phone" th:field="*{phone.number}" type="text"/>
+    </div>
+
+    <div class="row">
+        <label for="city">City:</label>
+        <input id="city" name="city" type="text" th:field="*{address.city}"/>
+    </div>
+
+    <div class="row">
+        <label for="street">Street:</label>
+        <input id="street" name="street" type="text" th:field="*{address.street}"/>
+    </div>
+
+    <div class="row">
+        <label for="street">House:</label>
+        <input id="house" name="house" type="text" th:field="*{address.house}"/>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <button type="submit" style="width: 120px;">Save</button>
+    </div>
+</form>
+
+</body>
+</html>
