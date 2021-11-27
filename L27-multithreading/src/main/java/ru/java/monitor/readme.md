@@ -1,1 +1,1 @@
-<img src="readme/pingpong-threads.png" width="300">
+<img src="img/pingpong-threads.png" width="300">
