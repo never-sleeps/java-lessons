@@ -1,4 +1,4 @@
-<img src="img/scheme.png" style="width: 300px; height: 300px">
+<img src="img/scheme.png" style="width: 700px;">
 
 1. Запрос от фронтенда приходит в frontendService (в примере это main)
 2. Создается сообщение
@@ -21,4 +21,4 @@
 
 ------------------------------------------------------------------------------------
 
-<img src="img/screenshot.png" style="width: 300px; height: 300px">
+<img src="img/screenshot.png" style="width: 500px;">
