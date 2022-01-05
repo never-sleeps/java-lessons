@@ -6,6 +6,4 @@ public interface FrontendService {
     void getAll();
 
     void createClient(ClientDto clientDto);
-
-    void deleteClient(ClientDto id);
 }

@@ -1,6 +1,7 @@
 package ru.java.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,14 +21,12 @@ import ru.app.messagesystem.message.MessageType;
 public class MessageSystemConfig {
 
     private final DBServiceClient dbServiceClient;
-    public static final String DATABASE_CLIENT_NAME = "databaseClient";
-    public static final String RESPONSE_CLIENT_NAME = "responseClient";
 
     public MessageSystemConfig(DBServiceClient dbServiceClient) {
         this.dbServiceClient = dbServiceClient;
     }
 
-    @Bean("messageSystem")
+    @Bean(value = "messageSystem", destroyMethod = "dispose")
     @ConditionalOnMissingBean(MessageSystem.class)
     public MessageSystem messageSystem() {
         return new MessageSystemImpl();
@@ -35,46 +34,25 @@ public class MessageSystemConfig {
 
     @Bean
     @DependsOn("messageSystem")
-    @Qualifier(DATABASE_CLIENT_NAME)
-    public MsClient databaseClient(final MessageSystem messageSystem) {
+    @Qualifier("${app.dbClient}")
+    public MsClient databaseClient(final MessageSystem messageSystem, @Value("${app.dbClient}") String clientName) {
         var requestHandlerDatabaseStore = new HandlersStoreImpl();
-        requestHandlerDatabaseStore.addHandler(
-                MessageType.SAVE_CLIENT,
-                new SaveClientRequestHandler(dbServiceClient)
-        );
-        requestHandlerDatabaseStore.addHandler(
-                MessageType.GET_CLIENTS,
-                new GetClientsRequestHandler(dbServiceClient)
-        );
-        var databaseMsClient = new MsClientImpl(
-                DATABASE_CLIENT_NAME,
-                messageSystem,
-                requestHandlerDatabaseStore);
-        messageSystem.addClient(databaseMsClient
-        );
+        requestHandlerDatabaseStore.addHandler(MessageType.SAVE_CLIENT, new SaveClientRequestHandler(dbServiceClient));
+        requestHandlerDatabaseStore.addHandler(MessageType.GET_CLIENTS, new GetClientsRequestHandler(dbServiceClient));
+        var databaseMsClient = new MsClientImpl(clientName, messageSystem, requestHandlerDatabaseStore);
+        messageSystem.addClient(databaseMsClient);
         return databaseMsClient;
     }
 
     @Bean
     @DependsOn("messageSystem")
-    @Qualifier(RESPONSE_CLIENT_NAME)
-    public MsClient responseClient(final MessageSystem messageSystem) {
+    @Qualifier("${app.responseClient}")
+    public MsClient responseClient(final MessageSystem messageSystem, @Value("${app.responseClient}") String responseClientName) {
         var responseHandlerDatabaseStore = new HandlersStoreImpl();
-        responseHandlerDatabaseStore.addHandler(
-                MessageType.SAVE_CLIENT,
-                new ResponseHandler()
-        );
-        responseHandlerDatabaseStore.addHandler(
-                MessageType.GET_CLIENTS,
-                new ResponseHandler()
-        );
-        var databaseMsClient = new MsClientImpl(
-                RESPONSE_CLIENT_NAME,
-                messageSystem,
-                responseHandlerDatabaseStore
-        );
+        responseHandlerDatabaseStore.addHandler(MessageType.SAVE_CLIENT, new ResponseHandler());
+        responseHandlerDatabaseStore.addHandler(MessageType.GET_CLIENTS, new ResponseHandler());
+        var databaseMsClient = new MsClientImpl(responseClientName, messageSystem, responseHandlerDatabaseStore);
         messageSystem.addClient(databaseMsClient);
         return databaseMsClient;
     }
-
 }

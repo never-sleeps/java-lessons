@@ -4,8 +4,7 @@ public enum MessageType {
     VOID_MESSAGE("voidMessage"),
     USER_DATA("UserData"),
     GET_CLIENTS("getClients"),
-    SAVE_CLIENT("saveClient"),
-    DELETE_CLIENT("deleteClient");
+    SAVE_CLIENT("saveClient");
 
     private final String name;
 
