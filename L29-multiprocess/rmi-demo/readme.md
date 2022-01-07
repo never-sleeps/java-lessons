@@ -7,6 +7,6 @@ RMI – участники процесса
 - Так же “серверная” часть должна быть наследником RemoteServer и быть зарегистрирована в реестре подключений (java.rmi.registry.LocateRegistry).
 
 
-<img src="img/scheme_1.png" style="width: 400px;">
+<img src="img/scheme_1.png" style="width: 600px;">
 
-<img src="img/scheme_2.png" style="width: 400px;">
+<img src="img/scheme_2.png" style="width: 600px;">
