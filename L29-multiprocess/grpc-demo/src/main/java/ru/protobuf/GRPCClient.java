@@ -32,10 +32,10 @@ public class GRPCClient {
 
         Iterator<UserMessage> allUsersIterator = stub.findAllUsers(Empty.getDefaultInstance());
         System.out.println("Great! We have received user data. Arya should be among them!");
-        allUsersIterator.forEachRemaining(um ->
+        allUsersIterator.forEachRemaining(userMessage ->
                 System.out.printf(
                         "{id: %d, name: %s %s}%n",
-                        um.getId(), um.getFirstName(), um.getLastName()
+                        userMessage.getId(), userMessage.getFirstName(), userMessage.getLastName()
                 )
         );
 

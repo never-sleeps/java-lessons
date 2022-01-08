@@ -19,25 +19,27 @@ public class RemoteDBServiceImpl extends RemoteDBServiceGrpc.RemoteDBServiceImpl
     @Override
     public void saveUser(UserMessage request, StreamObserver<UserMessage> responseObserver) {
         User user = realDBService.saveUser(request.getFirstName(), request.getLastName());
-        responseObserver.onNext(user2UserMessage(user));
+        UserMessage response = mapUserToUserMessage(user);
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
     @Override
     public void findAllUsers(Empty request, StreamObserver<UserMessage> responseObserver) {
         List<User> allUsers = realDBService.findAllUsers();
-        allUsers.forEach(u -> {
+        allUsers.forEach(user -> {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            responseObserver.onNext(user2UserMessage(u));
+            UserMessage response = mapUserToUserMessage(user);
+            responseObserver.onNext(response);
         });
         responseObserver.onCompleted();
     }
 
-    private UserMessage user2UserMessage(User user) {
+    private UserMessage mapUserToUserMessage(User user) {
         return UserMessage.newBuilder()
                 .setId(user.getId())
                 .setFirstName(user.getFirstName())

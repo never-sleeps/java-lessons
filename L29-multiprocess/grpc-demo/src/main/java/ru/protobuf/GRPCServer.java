@@ -22,6 +22,6 @@ public class GRPCServer {
                 .addService(remoteDBService).build();
         server.start();
         System.out.println("server waiting for client connections...");
-        server.awaitTermination();
+        server.awaitTermination(); // метод будет работать до тех пор, пока сервер будет работать. Когда в консоли ы завершим программу, сервер тоже завершится
     }
 }
