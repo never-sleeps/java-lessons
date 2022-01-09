@@ -32,4 +32,5 @@ public interface Versions {
     String jsr305 = "3.0.2";
 
     String grpc = "1.42.0";
+    String tomcat_annotations_api ="6.0.53";
 }
