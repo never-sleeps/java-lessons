@@ -39,7 +39,7 @@ public class ResponseStreamObserver implements io.grpc.stub.StreamObserver<Numbe
      * Поскольку число, полученное от сервера должно учитываться только один раз,
      * сбрасываем его после использования в расчёте
      */
-    public long getLastValueFromServer() {
+    public synchronized long getLastValueFromServer() {
         if(this.valueFromServer != 0) {
             var valueForCalculate = this.valueFromServer;
             setValueFromServer(0);
