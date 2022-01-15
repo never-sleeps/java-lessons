@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id "com.google.protobuf" version "0.8.16"
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+dependencies {
+    implementation 'io.grpc:grpc-netty'
+    implementation 'io.grpc:grpc-protobuf'
+    implementation 'io.grpc:grpc-stub'
+    implementation 'com.google.protobuf:protobuf-java:3.17.2'
+    implementation 'com.google.errorprone:error_prone_annotations:2.4.0'
+
+    implementation "org.apache.tomcat:annotations-api:6.0.53"
+
+    implementation 'ch.qos.logback:logback-classic'
+}
+
+def protoSrcDir = 'build/generated/sources/proto/main/java'
+def grpcSrcDir = 'build/generated/sources/proto/main/grpc'
+
+idea {
+    module {
+        sourceDirs += file(protoSrcDir)
+        sourceDirs += file(grpcSrcDir)
+    }
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir protoSrcDir
+        }
+        java {
+            srcDir grpcSrcDir
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.12.0"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.35.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+shadowJar {
+    archiveBaseName.set('grpc-server')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.demo.ServerGRPC'
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar
